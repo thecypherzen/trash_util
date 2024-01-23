@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+trash_loggr="/home/maverix/trash_util/trash_logr"
+trash="/home/$USER/.trash"
+
+
+if (( $# == 0 )); then
+	>&2 echo -e "rm: missing operand\nTry 'rm --help' for more information."
+	exit 1
+fi
+
+
+for file in $@; do
+	# get file's abs path and path_to_trash if in trash
+	base="$(basename $file)"
+	file_rpath="$(realpath $file)"
+	trash_path="$trash/$base"
+
+	# delete file
+	if [ -d $file ]; then
+		if [ ! -s $file ]; then
+			rmdir $file
+		else
+			rm -rf $file
+		fi
+	else
+		rm -f $file
+	fi
+
+	# if file is rmf'ed from '.trash', update trashlog
+	if [[ "$trash_path" == "$file_rpath" ]]; then
+		"$trash_loggr" -d "$base"
+	fi
+done

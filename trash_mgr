@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+trash="/home/$USER/.trash"
+rmf="/home/maverix/trash_util/rmf"
+
+declare -a files
+del_after=2
+
+while read line; do
+	files+=("$line")
+done < <(ls "$trash")
+
+for file in ${files[@]}; do
+	stat_res="$(stat -c %z "$trash/$file")"
+	file_mod_time="$(date -d "$stat_res" +%s)"
+	time_today="$(date -d "now" +%s)"
+	diff="$((time_today - file_mod_time))"
+	days="$((diff / 86400))"
+	if (($days >= $del_after)); then
+
+	fi
+done
+
