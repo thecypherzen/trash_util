@@ -44,7 +44,11 @@ fi
 
 # create all aliases
 for file in ${trash_util_files[@]}; do
-	aliases+="alias $file='$trash_util_dir/$file'\n"
+	aliases+="alias $file="
+	if [[ "$file" == "rm" ]]; then
+		file="trash"
+	fi
+	aliases+="'$trash_util_dir/$file'\n"
 done
 
 
