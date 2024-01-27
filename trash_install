@@ -26,8 +26,8 @@ fi
 
 
 # check if already installed and proceed iff otherwise
-line="$(cat $bash_rc | grep -w 'TRASH_UTIL_DIR' || true)"
-if [[ "${#line}" -gt 22 ]]; then
+count="$(cat $bash_rc | grep -wc 'TRASH_UTIL_DIR' || true)"
+if ((count > 0)); then
 	echo "trash_util already installed"
 	exit
 fi
