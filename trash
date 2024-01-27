@@ -81,7 +81,7 @@ for file in $@; do
 
 		# set log info
 		pathfrom="$(dirname "$(realpath $file)")"
-		loggr="/home/maverix/trash_util/trash_logr"
+		loggr="$TRASH_UTIL_DIR/trash_logr"
 
 		# if file already exists in trash, rename it
 		fn="$(basename $file)"
