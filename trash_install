@@ -10,8 +10,8 @@ set -e
 
 trash_util_dir="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
 IFS=' ' read -a trash_util_files <<< "rm rmf restore"
-aliases=""
 bash_rc="$HOME/.bashrc"
+aliases=""
 
 # check if already installed and proceed iff otherwise
 if [[ ! -z "$TRASH_UTIL_DIR" ]]; then
