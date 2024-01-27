@@ -28,7 +28,7 @@ fi
 # check if already installed and proceed iff otherwise
 count="$(cat $bash_rc | grep -wc 'TRASH_UTIL_DIR' || true)"
 if ((count > 0)); then
-	echo "trash_util already installed"
+	echo "[ERROR]: trash_util already installed"
 	exit
 fi
 
@@ -49,6 +49,17 @@ export TRASH_UTIL_DIR="$trash_util_dir"
 # ----  trash_util [end]  ---- #
 EOF
 
-# schedule crons
-"$trash_util_dir/cron_scheduler"
-"$trash_util_dir/cron_rescheduler"
+# schedule cron
+#+ cron_scheduler
+cron_exists="$(crontab -l | grep -wc "cron_scheduler" || true)"
+if ((cron_exists == 0)); then
+	"$trash_util_dir/cron_scheduler"
+fi
+
+#+ cron_rescheduler
+cron_exists="$(crontab -l | grep -wc "cron_rescheduler" || true)"
+if ((cron_exists == 0)); then
+	"$trash_util_dir/cron_rescheduler"
+fi
+
+echo "[SUCCESS]: installation complete"
