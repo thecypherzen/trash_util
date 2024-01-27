@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # -- global variables --- #
-trash="/home/$USER/.trash"		# path to trash directory
+trash="$HOME/.trash"			# path to trash directory
 trash_log="$trash/.trashlog"	# path to trashlog file
-loggr="/home/maverix/trash_util/trash_logr" # logger script
+loggr="$TRASH_UTIL_DIR/trash_logr" # logger script
 option_body=""					# option_body string
 option_header=""				# option msg_header
 fname_max_width=0				# max_width of file_name field
