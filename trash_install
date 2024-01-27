@@ -6,6 +6,8 @@
 #+	3. Schedules cron tabs
 
 # -- global variables -- #
+set -e
+
 trash_util_dir="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
 IFS=' ' read -a trash_util_files <<< "rm rmf restore"
 aliases=""
@@ -26,13 +28,14 @@ if [[ ! -e "$bash_rc" ]]; then
 	fi
 fi
 
-# write aliases to bash_profile file
+# write aliases to bash_profile filea
 cat >> "$bash_rc" <<EOF
 
-
-# ---- trash_util aliases[start] ---- #
+# ---- trash_util [start] ---- #
 $(echo -e $aliases)
-# ----  trash_util aliases[end]  ---- #
+# set env variable
+export TRASH_UTIL_DIR="$trash_util_dir"
+# ----  trash_util [end]  ---- #
 EOF
 
 # schedule crons
