@@ -6,8 +6,8 @@
 #+ -> permanently deletes the error log file created by the executing cron
 
 # -- global variables -- #
-trash="/home/$USER/.trash"			# abs path to trash
-rmf="/home/$USER/trash_util/rmf"	# abs path to rmf script
+trash="$HOME/.trash"				# abs path to trash
+rmf="$TRASH_UTIL_DIR/rmf"			# abs path to rmf script
 errlog="$trash/.errlog"				# abs to error log file
 declare -a files					# array of files in trash
 max_ttl=30							# file's max ttl (days)
