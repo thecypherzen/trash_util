@@ -6,8 +6,8 @@
 #+	if rmf'ed file is in trash, it updates the trash log
 
 # -- global variables -- #
-trash_loggr="/home/maverix/trash_util/trash_logr"	# trash logger file
-trash="/home/$USER/.trash"							# abs path to trash
+trash_loggr="$TRASH_UTIL_DIR/trash_logr"		# trash logger file
+trash="$HOME/.trash"							# abs path to trash
 
 
 # -- Entry Point -- #
@@ -27,12 +27,12 @@ for file in $@; do
 	# delete file
 	if [ -d $file ]; then
 		if [ ! -s $file ]; then
-			rmdir $file
+			rmdir "$file"
 		else
-			rm -rf $file
+			rm -rf "$file"
 		fi
 	else
-		rm -f $file
+		rm -f "$file"
 	fi
 
 	# if file is rmf'ed from '.trash', update trashlog
