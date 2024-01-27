@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # -- global variables -- #
-trash="$(realpath ~/.trash)"
+trash="$HOME/.trash"
 trash_log="$trash/.trashlog"
 str_to_log=""
 
