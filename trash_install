@@ -27,8 +27,14 @@ if [[ ! -e "$bash_rc" ]]; then
 fi
 
 # write aliases to bash_profile file
-cat > "tmp" <<EOF
-# ---- trash_util aliases[START] ---- #
+cat >> "$bash_rc" <<EOF
+
+
+# ---- trash_util aliases[start] ---- #
 $(echo -e $aliases)
-# ----  trash_util aliases[END]  ---- #
+# ----  trash_util aliases[end]  ---- #
 EOF
+
+# schedule crons
+"$trash_util_dir/cron_scheduler"
+"$trash_util_dir/cron_rescheduler"
