@@ -6,8 +6,8 @@
 
 
 # -- global variales -- #
-errlog="/home/$USER/.trash/.errlog"
-cron_scheduler="/home/$USER/trash_util/cron_scheduler"
+errlog="/home/$USER/.trash/.errlog"						# abs path to err log
+cron_scheduler="/home/$USER/trash_util/cron_scheduler"	# cron_scheduler path
 
 # define and set cronjob
 cron_job="@reboot "$cron_scheduler" 2>>$errlog"
