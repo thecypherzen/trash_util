@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# cron_scheduler - schedules a cronjob for the current user
+#+ -> the cronjob executes the 'trash_mgr' script 3 times daily
+#+ -> the purpose is to permanently delete files as old as, or
+#+ -> older than as defined in 'trash_mgr'
+#+ -> errors are loged
+
+# -- global variales -- #
+errlog="/home/$USER/.trash/.errlog"
+rmf="/home/$USER/trash_util/rmf"
+
+# define and set cronjob
+cron_job="0 7,10,16 * * * /home/$USER/trash_util/trash_mgr 2>>$errlog"
+(crontab -l -u "$USER" 2>>"$errlog"; echo "$cron_job") | crontab -
