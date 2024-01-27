@@ -8,6 +8,12 @@
 
 set -e
 
+# catch unknown errors
+exec_on_err()
+{
+	echo "[ERROR]: some error occured" 1>&2
+}
+trap 'exec_on_err' ERR
 
 # -- global variables -- #
 trash_util_dir="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
