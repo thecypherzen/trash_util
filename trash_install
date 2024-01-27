@@ -13,6 +13,13 @@ IFS=' ' read -a trash_util_files <<< "rm rmf restore"
 aliases=""
 bash_rc="$HOME/.bashrc"
 
+# check if already installed and proceed iff otherwise
+if [[ ! -z "$TRASH_UTIL_DIR" ]]; then
+	echo "trash_util already installed"
+	exit
+fi
+
+
 # create all aliases
 for file in ${trash_util_files[@]}; do
 	aliases+="alias $file='$trash_util_dir/$file'\n"
@@ -28,7 +35,7 @@ if [[ ! -e "$bash_rc" ]]; then
 	fi
 fi
 
-# write aliases to bash_profile filea
+# write aliases to bash_profile file
 cat >> "$bash_rc" <<EOF
 
 # ---- trash_util [start] ---- #
