@@ -5,9 +5,11 @@
 #+	2. Sets aliases for 'rm', 'rmf', and 'restore'
 #+	3. Schedules cron tabs
 
-# -- global variables -- #
+
 set -e
 
+
+# -- global variables -- #
 trash_util_dir="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
 IFS=' ' read -a trash_util_files <<< "rm rmf restore"
 bash_rc="$HOME/.bashrc"
@@ -28,7 +30,7 @@ fi
 # check if already installed and proceed iff otherwise
 count="$(cat $bash_rc | grep -wc 'TRASH_UTIL_DIR' || true)"
 if ((count > 0)); then
-	echo "[ERROR]: trash_util already installed"
+	echo "[ERROR]: trash_util already installed" 1>&2
 	exit
 fi
 
@@ -49,15 +51,19 @@ export TRASH_UTIL_DIR="$trash_util_dir"
 # ----  trash_util [end]  ---- #
 EOF
 
-# schedule cron
+# schedule crontabs
 #+ cron_scheduler
-cron_exists="$(crontab -l | grep -wc "cron_scheduler" || true)"
+cron_path="$trash_util_dir/cron_scheduler"
+cron_exists="$(crontab -l | grep -wc "$cron_path" || true)"
+echo "$cron_exists"
 if ((cron_exists == 0)); then
-	"$trash_util_dir/cron_scheduler"
+	"$cron_path"
 fi
 
+
 #+ cron_rescheduler
-cron_exists="$(crontab -l | grep -wc "cron_rescheduler" || true)"
+cron_exists="$(crontab -l | grep -wc "@reboot $cron_path" || true)"
+echo "$cron_exists"
 if ((cron_exists == 0)); then
 	"$trash_util_dir/cron_rescheduler"
 fi
