@@ -2,7 +2,7 @@
 # moves files to the ~/.trash directory
 
 # -- global variables -- #
-dest="/home/$USER/.trash"
+dest="$HOME/.trash"
 table_header=""
 
 
