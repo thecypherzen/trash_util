@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
-trash="/home/$USER/.trash"
-rmf="/home/maverix/trash_util/rmf"
+# trash_mgr: manages the content of the '.trash' directory
+#+ -> scans through files in trash and deletes them permanently iff
+#+ file has spent up to or more than 30 days in trash.
+#+ -> permanently deletes the error log file created by the executing cron
 
-declare -a files
-del_after=2
+# -- global variables -- #
+trash="/home/$USER/.trash"			# abs path to trash
+rmf="/home/$USER/trash_util/rmf"	# abs path to rmf script
+errlog="$trash/.errlog"				# abs to error log file
+declare -a files					# array of files in trash
+max_ttl=30							# file's max ttl (days)
 
+# read files from trash
 while read line; do
 	files+=("$line")
 done < <(ls "$trash")
 
+# calculate time lived in trash and del if ttl >= max_ttl
 for file in ${files[@]}; do
 	base_fn="$(basename "$file")"
 	stat_res="$(stat -c %z "$trash/$base_fn")"
@@ -17,7 +25,10 @@ for file in ${files[@]}; do
 	time_today="$(date -d "now" +%s)"
 	diff="$((time_today - file_mod_time))"
 	days="$((diff / 86400))"
-	if (($days >= $del_after)); then
+	if (($days >= $max_ttl)); then
 		"$rmf" "$trash/$base_fn"
 	fi
 done
+
+# perm del cron_scheduler's error logfile if trash_mgr executes
+"$rmf" "$errlog"
