@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
-trash_loggr="/home/maverix/trash_util/trash_logr"
-trash="/home/$USER/.trash"
+# rmf - forcibly deletes files
+#+	basically an rm -f
+#+	knows if name passed is a directory or not
+#+	if rmf'ed file is in trash, it updates the trash log
+
+# -- global variables -- #
+trash_loggr="/home/maverix/trash_util/trash_logr"	# trash logger file
+trash="/home/$USER/.trash"							# abs path to trash
 
 
+# -- Entry Point -- #
+# throw error if no arg is passed.
 if (( $# == 0 )); then
 	>&2 echo -e "rm: missing operand\nTry 'rm --help' for more information."
 	exit 1
 fi
 
-
+# parse each file for deletion
 for file in $@; do
 	# get file's abs path and path_to_trash if in trash
 	base="$(basename $file)"
