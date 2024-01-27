@@ -15,6 +15,7 @@ exec_on_err()
 }
 trap 'exec_on_err' ERR
 
+# -- MAIN ENTRY -- #
 # -- global variables -- #
 trash_util_dir="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
 IFS=' ' read -a trash_util_files <<< "rm rmf restore"
