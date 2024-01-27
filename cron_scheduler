@@ -7,8 +7,8 @@
 #+ -> errors are loged
 
 # -- global variales -- #
-errlog="/home/$USER/.trash/.errlog"
-rmf="/home/$USER/trash_util/rmf"
+errlog="$HOME/.trash/.errlog"
+rmf="$TRASH_UTIL_DIR/rmf"
 
 # define and set cronjob
 cron_job="0 7,10,16 * * * /home/$USER/trash_util/trash_mgr 2>>$errlog"
