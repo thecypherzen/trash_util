@@ -7,9 +7,9 @@
 #+ -> errors are loged
 
 # -- global variales -- #
-errlog="$TRASH_UTIL_DIR/.errlog"
-rmf="$TRASH_UTIL_DIR/rmf"
+errlog="$TRASH_UTIL_DIR/.utilities/.errlog"
+rmf="$TRASH_UTIL_DIR/.utilities/rmf"
 
 # define and set cronjob
-cron_job="0 7,10,16 * * * $TRASH_UTIL_DIR/trash_mgr 2>>$errlog"
+cron_job="0 7,10,16 * * * $TRASH_UTIL_DIR/.utilities/trash_mgr 2>>$errlog"
 (crontab -l -u "$USER" 2>>"$errlog"; echo "$cron_job") | crontab -
