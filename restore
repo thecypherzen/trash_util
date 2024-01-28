@@ -219,7 +219,7 @@ for name in $@; do
 		while [[ "$check" == "true" ]]; do
 			if [[ -e "$dest/$dest_fname" ]]; then
 				echo "'$dest_fname' already exists in $dest"
-				read -p "Want to rename it before restoring? [y/n]: " OPT_R
+				read -p "Give restored file a new name? [y/n]: " OPT_R
 
 				# handle user entry options
 				case "$OPT_R" in
@@ -228,7 +228,7 @@ for name in $@; do
 						;;
 					'n'|'N')
 						# confirm replacement and proceed or exit if no
-						echo "proceeding will replace existing file."
+						echo "continuing will replace existing file."
 						read -p "Proceed? [y/n]: " OPT_N
 						case "$OPT_N" in
 							'y'|'Y')
