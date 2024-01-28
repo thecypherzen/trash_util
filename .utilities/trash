@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 # moves files to the ~/.trash directory
 
+set -e
+
 # -- global variables -- #
 dest="$HOME/.trash"
 table_header=""
-
+errlog="$TRASH_UTIL_DIR/.utilities/.errlog"
 
 # -- functions -- #
+
+# error handler
+on_error_exec()
+{
+	1>&2 echo "[FATAL]: some error occured. See $errlog"
+}
+
+trap 'on_error_exec' ERR
 
 # draw_table_line - draws table header line
 #+ $1(int): width of the line
@@ -57,7 +67,7 @@ create_trashlog()
 # --- MAIN ENTRY --- #
 # if args not supplied, exit with msg
 if (( $# == 0 )); then
-	>&2 echo "trash: missing operand"
+	1>&2 echo "trash: missing operand"
 	exit 1
 fi
 
@@ -76,12 +86,12 @@ for file in $@; do
 			fi
 			# create trashlog
 			#+ USAGE: create_trashlog <width of table>
-			create_trashlog "80"
+			create_trashlog "80" 1>&2
 		fi
 
 		# set log info
 		pathfrom="$(dirname "$(realpath $file)")"
-		loggr="$TRASH_UTIL_DIR/trash_logr"
+		loggr="$TRASH_UTIL_DIR/.utilities/trash_logr"
 
 		# if file already exists in trash, rename it
 		fn="$(basename $file)"
@@ -91,14 +101,14 @@ for file in $@; do
 			while [[ -e "$new_fn" ]]; do
 				new_fn+=".old"
 			done
-			mv "$tempfile" "$new_fn"
-			"$loggr" -u "$fn" "$(basename $new_fn)"
+			mv "$tempfile" "$new_fn" 1>&2
+			"$loggr" -u "$fn" "$(basename $new_fn 2>"$errlog")" 1>&2
 		fi
 
 		# add file to log
-		"$loggr" -a "$fn" "$pathfrom"
+		"$loggr" -a "$fn" "$pathfrom" 1>&2
 
 		# move file to trash
-		mv $file $dest
+		mv $file $dest 1>&2
 	fi
 done
