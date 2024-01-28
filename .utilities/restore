@@ -14,8 +14,16 @@ declare -a OP_CODES					# array of option codes
 op_idx=0							# index of option codes
 errlog="$TRASH_UTIL_DIR/.utilities/.errlog"	# error log
 
+set -e
 
 # -- functions -- #
+# error handler
+on_error_exec()
+{
+	1>&2 echo "[FATAL]: some error occured. See $errlog for more info."
+}
+trap 'on_error_exec' ERR
+
 
 # pad_spaces - add spaces to message header or body
 #+ uses two flags:
@@ -118,7 +126,7 @@ print_opt_msg()
 	set_field_widths
 	create_msg_header
 	parse_msg_body "$1"
-	echo -e "$option_body"
+	echo -e "$option_body" 2>>"$errlog"
 }
 
 
@@ -155,7 +163,7 @@ strip_suffixes()
 			old_suff="false"
 		fi
 	done
-	echo "$f_name"
+	echo "$f_name" 2>>"$errlog"
 }
 
 # --- MAIN ENTRY --- #
@@ -168,7 +176,7 @@ fi
 # iterate through file names provided
 for name in $@; do
 	# set path to 'name' in variable 'file'
-	ifpath="$(echo "$name" | grep -wc '.trash')"
+	ifpath="$(echo "$name" | grep -wc '.trash' 2>>"$errlog")"
 	if [[ "$ifpath" -gt '0' ]]; then
 		file="$name"
 	else
@@ -182,7 +190,7 @@ for name in $@; do
 
 	# if 'file' is not in 'trash' throw error
 	#+ otherwise proceed to parse 'file'
-	base="$(basename $file)"
+	base="$(basename $file 2>>"$errlog")"
 	if [ ! -e $file ]; then
 		1>&2 echo "[ERROR]: '"$base"' not in trash"
 	else
@@ -190,9 +198,9 @@ for name in $@; do
 		res=""
 		f_count=0
 		while read -r line; do
-			entry="$(echo "$line" | tr -d '|' | tr '\n' ' ' | tr -s ' ')"
-			name="$(echo "$line" | cut -d ' ' -f1)"
-			count="$(echo "$name" | grep -wc "$base")"
+			entry="$(echo "$line" | tr -d '|' | tr '\n' ' ' | tr -s ' ' 2>>"$errlog")"
+			name="$(echo "$line" | cut -d ' ' -f1 2>>"$errlog")"
+			count="$(echo "$name" | grep -wc "$base" 2>>"$errlog")"
 			if [[ "$name" == "$base" || "$count" -gt 0 ]]; then
 				res+="$entry"
 				((f_count++))
@@ -211,7 +219,7 @@ for name in $@; do
 
 		# define variables for final move
 		log_fname="${MATCH_FILES[$R_OPT]}"
-		dest_fname="$(strip_suffixes "$log_fname")"
+		dest_fname="$(strip_suffixes "$log_fname" 2>>"$errlog")"
 		dest="${MATCH_FILES[$((R_OPT + 1))]}"
 		check="true"
 
@@ -255,11 +263,11 @@ for name in $@; do
 		done
 
 		# move file from trash to destination
-		1>&2 mv "$trash/$log_fname" "$dest/$dest_fname"
-		1>&2 "$loggr" -d "$log_fname"
+		mv "$trash/$log_fname" "$dest/$dest_fname" 2>>"$errlog"
+		"$loggr" -d "$log_fname" 2>>"$errlog"
 
 		# print success message
-		1>&2 echo "[$log_fname] restored  to [$dest]"
+		echo "[$log_fname] restored  to [$dest]" 2>>"$errlog"
 	fi
 done
-rm -f '.tmp'
+rm -f '.tmp' 2>>"$errlog"
