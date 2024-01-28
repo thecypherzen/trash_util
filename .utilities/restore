@@ -3,7 +3,7 @@
 # -- global variables --- #
 trash="$HOME/.trash"				# path to trash directory
 trash_log="$trash/.trashlog"		# path to trashlog file
-loggr="$TRASH_UTIL_DIR/trash_logr" 	# logger script
+loggr="$TRASH_UTIL_DIR/.utilities/trash_logr" 	# logger script
 option_body=""						# option_body string
 option_header=""					# option msg_header
 fname_max_width=0					# max_width of file_name field
@@ -12,7 +12,7 @@ declare -a MATCH_FILES				# array of matching files in trashlog
 declare -i R_OPT					# restore option
 declare -a OP_CODES					# array of option codes
 op_idx=0							# index of option codes
-errlog="$TRASH_UTIL_DIR/.errlog"	# error log
+errlog="$TRASH_UTIL_DIR/.utilities/.errlog"	# error log
 
 
 # -- functions -- #
@@ -161,7 +161,7 @@ strip_suffixes()
 # --- MAIN ENTRY --- #
 # check if no arg is provided. Exit if true else inspect each arg
 if (( $# == 0 )); then
-	>&2 echo "[ERROR]: restore: missing argument"
+	1>&2 echo "[ERROR]: restore: missing argument"
 	exit 1
 fi
 
@@ -184,7 +184,7 @@ for name in $@; do
 	#+ otherwise proceed to parse 'file'
 	base="$(basename $file)"
 	if [ ! -e $file ]; then
-		>&2 echo "[ERROR]: '"$base"' not in trash"
+		1>&2 echo "[ERROR]: '"$base"' not in trash"
 	else
 		# parse trashlog and select logs matching 'base'
 		res=""
@@ -239,13 +239,13 @@ for name in $@; do
 								break
 								;;
 							*)
-								>&2 echo "TERMINATED"
+								1>&2 echo "TERMINATED"
 								exit 1
 								;;
 						esac
 						;;
 					*)
-						>&2 echo "unknown option"
+						1>&2 echo "unknown option"
 						exit 1
 						;;
 				esac
@@ -255,11 +255,11 @@ for name in $@; do
 		done
 
 		# move file from trash to destination
-		>&2 mv "$trash/$log_fname" "$dest/$dest_fname"
-		>&2 "$loggr" -d "$log_fname"
+		1>&2 mv "$trash/$log_fname" "$dest/$dest_fname"
+		1>&2 "$loggr" -d "$log_fname"
 
 		# print success message
-		>&2 echo "[$log_fname] restored  to [$dest]"
+		1>&2 echo "[$log_fname] restored  to [$dest]"
 	fi
 done
 rm -f '.tmp'
