@@ -5,30 +5,40 @@
 #+ file has spent up to or more than 30 days in trash.
 #+ -> permanently deletes the error log file created by the executing cron
 
+set -e
+
 # -- global variables -- #
-trash="$HOME/.trash"				# abs path to trash
-rmf="$TRASH_UTIL_DIR/rmf"			# abs path to rmf script
-errlog="$trash/.errlog"				# abs to error log file
-declare -a files					# array of files in trash
-max_ttl=30							# file's max ttl (days)
+trash="$HOME/.trash"						# abs path to trash
+rmf="$TRASH_UTIL_DIR/.utilities/rmf"		# abs path to rmf script
+errlog="$TRASH_UTIL_DIR/.utilities/.errlog"	# abs to error log file
+declare -a files							# array of files in trash
+max_ttl=30									# file's max ttl (days)
+
+# error handler
+on_error_exec()
+{
+	echo "[FATAL]: some error occured. see $errlog" 2>>"$errlog"
+}
+trap 'on_error_exec' ERR
+
 
 # read files from trash
 while read line; do
 	files+=("$line")
-done < <(ls "$trash")
+done < <(ls "$trash" 2>>"$errlog")
 
 # calculate time lived in trash and del if ttl >= max_ttl
 for file in ${files[@]}; do
-	base_fn="$(basename "$file")"
-	stat_res="$(stat -c %z "$trash/$base_fn")"
-	file_mod_time="$(date -d "$stat_res" +%s)"
-	time_today="$(date -d "now" +%s)"
+	base_fn="$(basename "$file" 2>>"$errlog")"
+	stat_res="$(stat -c %z "$trash/$base_fn" 2>>"$errlog")"
+	file_mod_time="$(date -d "$stat_res" +%s 2>>"$errlog")"
+	time_today="$(date -d "now" +%s 2>>"$errlog")"
 	diff="$((time_today - file_mod_time))"
 	days="$((diff / 86400))"
 	if (($days >= $max_ttl)); then
-		"$rmf" "$trash/$base_fn"
+		"$rmf" "$trash/$base_fn" 2>>"$errlog"
 	fi
 done
 
 # perm del cron_scheduler's error logfile if trash_mgr executes
-"$rmf" "$errlog"
+"$rmf" "$errlog" 2>>"$errlog"
