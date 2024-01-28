@@ -212,19 +212,19 @@ for name in $@; do
 
 		strip_suffixes "$file"
 
-		#count="$(echo "$file" | grep -c '.old$')"
-		#mv "$trash/$file" "$dest"
-		#"$loggr" -d "$file"
+		count="$(echo "$file" | grep -c '.old$')"
+		mv "$trash/$file" "$dest"
+		"$loggr" -d "$file"
 
-		## if restored file has a '.old' suffix, rename it to basename
-		#if (( $count > 0)); then
-		#	new_name="$(echo "$file" | cut -d '.' -f1)"
-		#	mv "$dest/$file" "$dest/$new_name"
-		#	file="$new_name"
-		#fi
+		# if restored file has a '.old' suffix, rename it to basename
+		if (( $count > 0)); then
+			new_name="$(echo "$file" | cut -d '.' -f1)"
+			mv "$dest/$file" "$dest/$new_name"
+			file="$new_name"
+		fi
 
-		## print success message
-		#echo "[$file] restored  to [$dest]"
+		# print success message
+		echo "[$file] restored  to [$dest]"
 	fi
 done
 rm -f '.tmp'
