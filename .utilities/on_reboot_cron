@@ -4,7 +4,7 @@
 #+ -> errors are logged to the 'errlog' file
 
 # -- global variales -- #
-errlog="$TRASH_UTIL_DIR/.errlog"
+errlog="$TRASH_UTIL_DIR/.utilities/.errlog"
 rmf="$TRASH_UTIL_DIR/rmf"
 
 # define and set cronjob
