@@ -67,7 +67,7 @@ export TRASH_UTIL_DIR="$trash_util_dir"
 EOF
 
 # define error log
-errlog="$TRASH_UTIL_DIR/.errlog"
+errlog="$TRASH_UTIL_DIR/.utilities/.errlog"
 
 # schedule crontabs
 #+ cron_scheduler
