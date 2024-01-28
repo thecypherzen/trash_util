@@ -13,7 +13,7 @@ errlog="$TRASH_UTIL_DIR/.utilities/.errlog"
 # error handler
 on_error_exec()
 {
-	1>&2 echo "[FATAL]: some error occured. See $errlog"
+	echo "[FATAL]: some error occured. See $errlog" 2>>"$errlog"
 }
 
 trap 'on_error_exec' ERR
@@ -60,14 +60,14 @@ create_trashlog()
 	draw_table_line "$1"
 	write_table_fields "FILE"  "| LOCATION"  ' '
 	draw_table_line "$1"
-	echo -e "$table_header" > "$dest/.trashlog"
+	echo -e "$table_header" > "$dest/.trashlog" 2>>"$errlog"
 }
 
 
 # --- MAIN ENTRY --- #
 # if args not supplied, exit with msg
 if (( $# == 0 )); then
-	1>&2 echo "trash: missing operand"
+	echo "trash: missing operand" 2>>"$errlog"
 	exit 1
 fi
 
@@ -75,7 +75,7 @@ fi
 for file in $@; do
 	# if file doesn't exist, print message and exit
 	if [ ! -e "$file" ]; then
-		>&2 echo "file '$file' doesn't exist"
+		echo "file '$file' doesn't exist" 2>>"$errlog"
 	else
 		# if trash directory doesn't exist:
 		if [[ ! -e "$dest" || ! -d "$dest" ]]; then
@@ -86,11 +86,11 @@ for file in $@; do
 			fi
 			# create trashlog
 			#+ USAGE: create_trashlog <width of table>
-			create_trashlog "80" 1>&2
+			create_trashlog "80" 2>>"$errlog"
 		fi
 
 		# set log info
-		pathfrom="$(dirname "$(realpath $file)")"
+		pathfrom="$(dirname "$(realpath $file 2>>"$errlog")")"
 		loggr="$TRASH_UTIL_DIR/.utilities/trash_logr"
 
 		# if file already exists in trash, rename it
@@ -102,13 +102,13 @@ for file in $@; do
 				new_fn+=".old"
 			done
 			mv "$tempfile" "$new_fn" 1>&2
-			"$loggr" -u "$fn" "$(basename $new_fn 2>"$errlog")" 1>&2
+			"$loggr" -u "$fn" "$(basename $new_fn 2>>"$errlog")" 2>>"$errlog"
 		fi
 
 		# add file to log
-		"$loggr" -a "$fn" "$pathfrom" 1>&2
+		"$loggr" -a "$fn" "$pathfrom" 2>>"$errlog"
 
 		# move file to trash
-		mv $file $dest 1>&2
+		mv $file $dest 2>>"$errlog"
 	fi
 done
