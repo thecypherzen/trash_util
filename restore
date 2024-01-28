@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 
 # -- global variables --- #
-trash="$HOME/.trash"			# path to trash directory
-trash_log="$trash/.trashlog"	# path to trashlog file
-loggr="$TRASH_UTIL_DIR/trash_logr" # logger script
-option_body=""					# option_body string
-option_header=""				# option msg_header
-fname_max_width=0				# max_width of file_name field
-loc_max_width=0					# max_width of location field
-declare -a MATCH_FILES			# array of matching files in trashlog
-declare -i R_OPT				# restore option
-declare -a OP_CODES				# array of option codes
-op_idx=0						# index of option codes
+trash="$HOME/.trash"				# path to trash directory
+trash_log="$trash/.trashlog"		# path to trashlog file
+loggr="$TRASH_UTIL_DIR/trash_logr" 	# logger script
+option_body=""						# option_body string
+option_header=""					# option msg_header
+fname_max_width=0					# max_width of file_name field
+loc_max_width=0						# max_width of location field
+declare -a MATCH_FILES				# array of matching files in trashlog
+declare -i R_OPT					# restore option
+declare -a OP_CODES					# array of option codes
+op_idx=0							# index of option codes
+errlog="$TRASH_UTIL_DIR/.errlog"	# error log
 
 
 # -- functions -- #
@@ -210,19 +211,58 @@ for name in $@; do
 		log_fname="${MATCH_FILES[$R_OPT]}"
 		dest_fname="$(strip_suffixes "$log_fname")"
 		dest="${MATCH_FILES[$((R_OPT + 1))]}"
+		check="true"
 
-		#mv "$trash/$file" "$dest"
-		#"$loggr" -d "$file"
+		# handle if file_name exists in destination
+		#+ keep checking until final file_name is unique to destination or
+		#+ user chooses to replace existing file
+		while [[ "$check" == "true" ]]; do
+			if [[ -e "$dest/$dest_fname" ]]; then
+				echo "'$dest_fname' already exists in $dest"
+				read -p "Want to rename it before restoring? [y/n]: " OPT_R
 
-		## if restored file has a '.old' suffix, rename it to basename
-		#if (( $count > 0)); then
-		#	new_name="$(echo "$file" | cut -d '.' -f1)"
-		#	mv "$dest/$file" "$dest/$new_name"
-		#	file="$new_name"
-		#fi
+				# handle user entry options
+				case "$OPT_R" in
+					'y'|'Y')
+						read -p "Enter new name: " dest_fname
+						;;
+					'n'|'N')
+						# confirm replacement and proceed or exit if no
+						echo "proceeding will replace existing file."
+						read -p "Proceed? [y/n]: " OPT_N
+						case "$OPT_N" in
+							'y'|'Y')
+								echo "proceeding to restore and replace..."
+								break
+								;;
+							*)
+								echo "TERMINATED"
+								exit 1
+								;;
+						esac
+						;;
+					*)
+						echo "unknown option"
+						exit 1
+						;;
+				esac
+			else
+				check="false"
+			fi
+		done
 
-		## print success message
-		#echo "[$file] restored  to [$dest]"
+		mv "$trash/$file" "$dest"
+		"$loggr" -d "$file"
+
+		# if restored file has a '.old' suffix, rename it to basename
+		if (( $count > 0)); then
+			new_name="$(echo "$file" | cut -d '.' -f1)"
+			mv "$dest/$file" "$dest/$new_name"
+			file="$new_name"
+		fi
+
+		# print success message
+		echo "[$file] restored  to [$dest]"
 	fi
 done
 rm -f '.tmp'
