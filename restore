@@ -208,6 +208,8 @@ for name in $@; do
 		fi
 
 		# restore the file with message success
+
+		# define variables for final move
 		log_fname="${MATCH_FILES[$R_OPT]}"
 		dest_fname="$(strip_suffixes "$log_fname")"
 		dest="${MATCH_FILES[$((R_OPT + 1))]}"
@@ -216,6 +218,7 @@ for name in $@; do
 		# handle if file_name exists in destination
 		#+ keep checking until final file_name is unique to destination or
 		#+ user chooses to replace existing file
+		#+ final value of 'dest_fname' is the usable value
 		while [[ "$check" == "true" ]]; do
 			if [[ -e "$dest/$dest_fname" ]]; then
 				echo "'$dest_fname' already exists in $dest"
@@ -236,13 +239,13 @@ for name in $@; do
 								break
 								;;
 							*)
-								echo "TERMINATED"
+								>&2 echo "TERMINATED"
 								exit 1
 								;;
 						esac
 						;;
 					*)
-						echo "unknown option"
+						>&2 echo "unknown option"
 						exit 1
 						;;
 				esac
@@ -251,18 +254,12 @@ for name in $@; do
 			fi
 		done
 
-		mv "$trash/$file" "$dest"
-		"$loggr" -d "$file"
-
-		# if restored file has a '.old' suffix, rename it to basename
-		if (( $count > 0)); then
-			new_name="$(echo "$file" | cut -d '.' -f1)"
-			mv "$dest/$file" "$dest/$new_name"
-			file="$new_name"
-		fi
+		# move file from trash to destination
+		>&2 mv "$trash/$log_fname" "$dest/$dest_fname"
+		>&2 "$loggr" -d "$log_fname"
 
 		# print success message
-		echo "[$file] restored  to [$dest]"
+		>&2 echo "[$log_fname] restored  to [$dest]"
 	fi
 done
 rm -f '.tmp'
