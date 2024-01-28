@@ -4,8 +4,17 @@
 trash="$HOME/.trash"
 trash_log="$trash/.trashlog"
 str_to_log=""
+errlog="$TRASH_UTIL_DIR/.utilities/.errlog"
+
+set -e
 
 # -- functions -- #
+# -- error handler -- #
+on_error_exec()
+{
+	1>&2 echo "[FATAL]: some error occured. See $errlog"
+}
+trap 'on_error_exec' ERR
 
 # stringify_item - parses arguments passed into a string
 #+ formatted with spaces as matches the logfile
@@ -32,9 +41,9 @@ stringify_item()
 log_add()
 {
 	match="false"
-	log_item="$(echo "$str_to_log" | tr -d ' '| cut -d '|' -f1)"
-	log_path="$(echo "$str_to_log" | tr -d ' '| cut -d '|' -f2)"
-	echo "$str_to_log" >> $trash_log
+	log_item="$(echo "$str_to_log" | tr -d ' '| cut -d '|' -f1 2>>"$errlog")"
+	log_path="$(echo "$str_to_log" | tr -d ' '| cut -d '|' -f2 2>>"$errlog")"
+	echo "$str_to_log" >> $trash_log 2>>"$errlog"
 }
 
 
@@ -47,8 +56,8 @@ log_update()
 	match="false"
 	new_log=""
 	while read -r line; do
-		fn="$(echo "$line" | tr -d ' ' | cut -d '|' -f1 )"
-		fpath="$(echo "$line" | tr -d ' ' | cut -d '|' -f2)"
+		fn="$(echo "$line" | tr -d ' ' | cut -d '|' -f1 2>>"$errlog")"
+		fpath="$(echo "$line" | tr -d ' ' | cut -d '|' -f2 2>>"$errlog")"
 		if [[ "$fn" == "$1" ]]; then
 			stringify_item "$2" "$fpath"
 			new_log+="$str_to_log\n"
@@ -56,7 +65,7 @@ log_update()
 			new_log+="$line\n"
 		fi
 	done < "$trash_log"
-	echo -en "$new_log" > "$trash_log"
+	echo -en "$new_log" > "$trash_log" 2>>"$errlog"
 }
 
 
@@ -71,10 +80,8 @@ log_delete()
 			new_log+="$line\n"
 		fi
 	done < "$trash_log"
-	echo -en "$new_log" > "$trash_log"
+	echo -en "$new_log" > "$trash_log" 2>>"$errlog"
 }
-
-
 
 # -- MAIN ENTRY -- #
 # recognized flags:
@@ -96,7 +103,7 @@ while (( "$#" > 0 )); do
 		'-d'|'--delete')
 			shift
 			if [[ "$1" == -* ]]; then
-				echo "invalid argument passed" >&2
+				echo "invalid argument passed" 2>>"$errlog"
 				exit 1
 			fi
 			log_delete "$1"
@@ -107,7 +114,7 @@ while (( "$#" > 0 )); do
 		'-u'|'--update')
 			shift
 			if [[ "$1" == -* || "$2" == -* ]]; then
-				echo "at least one invalid argument passed" >&2
+				echo "at least one invalid argument passed" 2>>"$errlog"
 				exit 1
 			fi
 			log_update "$@"
