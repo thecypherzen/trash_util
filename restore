@@ -143,6 +143,19 @@ opt_selector()
 	fi
 }
 
+strip_suffixes()
+{
+	old_suff="true"
+	f_name="$1"
+	while [[ "$old_suff" == "true" ]]; do
+		if [[ "$(echo $f_name | rev | cut -d '.' -f1)" == "dlo" ]]; then
+			f_name="$(echo $f_name | rev | cut -d '.' -f2- | rev)"
+		else
+			old_suff="false"
+		fi
+	done
+	echo "$f_name"
+}
 
 # --- MAIN ENTRY --- #
 # check if no arg is provided. Exit if true else inspect each arg
@@ -197,19 +210,21 @@ for name in $@; do
 		file="${MATCH_FILES[$R_OPT]}"
 		dest="${MATCH_FILES[$((R_OPT + 1))]}"
 
-		count="$(echo "$file" | grep -c '.old$')"
-		mv "$trash/$file" "$dest"
-		"$loggr" -d "$file"
+		strip_suffixes "$file"
 
-		# if restored file has a '.old' suffix, rename it to basename
-		if (( $count > 0)); then
-			new_name="$(echo "$file" | cut -d '.' -f1)"
-			mv "$dest/$file" "$dest/$new_name"
-			file="$new_name"
-		fi
+		#count="$(echo "$file" | grep -c '.old$')"
+		#mv "$trash/$file" "$dest"
+		#"$loggr" -d "$file"
 
-		# print success message
-		echo "[$file] restored  to [$dest]"
+		## if restored file has a '.old' suffix, rename it to basename
+		#if (( $count > 0)); then
+		#	new_name="$(echo "$file" | cut -d '.' -f1)"
+		#	mv "$dest/$file" "$dest/$new_name"
+		#	file="$new_name"
+		#fi
+
+		## print success message
+		#echo "[$file] restored  to [$dest]"
 	fi
 done
 rm -f '.tmp'
