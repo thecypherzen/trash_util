@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+# Installs the trash_util:
+#+	1. Gets paths to all scripts
+#+	2. Sets aliases for 'rm', 'rmf', and 'restore'
+#+	3. Schedules cron tabs
+
+
+set -e
+
+# catch unknown errors
+exec_on_err()
+{
+	echo "[ERROR]: some error occured, installation incomplete." 1>&2
+	echo "visit 'link here' to uninstall and re-run installer" 1>&2
+}
+trap 'exec_on_err' ERR
+
+# -- MAIN ENTRY -- #
+# -- global variables -- #
+trash_util_dir="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
+IFS=' ' read -a trash_util_files <<< "rm rmf restore"
+bash_rc="$HOME/.bashrc"
+aliases=""
+
+# print message
+echo "installing 'trash'..."
+sleep 1
+
+# get/set bash_profile file
+if [[ ! -e "$bash_rc" ]]; then
+	if [[ -e "$HOME/.bash_profile" ]]; then
+		bash_rc="$HOME/.bash_profile"
+	else
+		# create bashrc
+		touch "$bash_rc"
+	fi
+fi
+
+
+# check if already installed and proceed iff otherwise
+count="$(cat $bash_rc | grep -wc 'TRASH_UTIL_DIR' || true)"
+if ((count > 0)); then
+	echo "[ERROR]: trash_util already installed" 1>&2
+	exit 1
+fi
+
+
+# create all aliases
+for file in ${trash_util_files[@]}; do
+	aliases+="alias $file="
+	if [[ "$file" == "rm" ]]; then
+		file="trash"
+	fi
+	aliases+="'$trash_util_dir/$file'\n"
+done
+
+
+# write aliases to bash_profile file
+cat >> "$bash_rc" <<EOF
+
+# ---- trash_util [start] ---- #
+$(echo -e $aliases)
+# set env variable
+export TRASH_UTIL_DIR="$trash_util_dir"
+# ----  trash_util [end]  ---- #
+EOF
+
+# define error log
+errlog="$TRASH_UTIL_DIR/.errlog"
+
+# schedule crontabs
+#+ cron_scheduler
+cron_path="$trash_util_dir/cron_scheduler"
+cron_exists="$(crontab -l 2>>"$errlog" | grep -wc "$cron_path" || true)"
+if ((cron_exists == 0)); then
+	"$cron_path"
+fi
+
+#+ on_reboot_cron
+cron_exists="$(crontab -l 2>>"$errlog"| grep -wc "@reboot $cron_path" || true)"
+if ((cron_exists == 0)); then
+	"$trash_util_dir/on_reboot_cron"
+fi
+echo "" > "$errlog"
+echo "[SUCCESS]: installation complete"
