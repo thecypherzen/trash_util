@@ -14,16 +14,9 @@ declare -a OP_CODES					# array of option codes
 op_idx=0							# index of option codes
 errlog="$TRASH_UTIL_DIR/.utilities/.errlog"	# error log
 
-set -e
+
 
 # -- functions -- #
-# error handler
-on_error_exec()
-{
-	1>&2 echo "[FATAL]: some error occured. See $errlog for more info."
-}
-trap 'on_error_exec' ERR
-
 
 # pad_spaces - add spaces to message header or body
 #+ uses two flags:
