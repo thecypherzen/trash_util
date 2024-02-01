@@ -58,6 +58,8 @@ read -p "Set max days a file will be in trash(30 default): " MAX_TTL
 if (($MAX_TTL <= 0)); then
 	MAX_TTL=30
 fi
+echo -n "Setting max_ttl to $MAX_TTL days."
+echo "To modify, set value of env variable 'MAX_TTL'"
 
 # write aliases to bash_profile file
 cat >> "$bash_rc" <<EOF
