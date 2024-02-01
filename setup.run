@@ -38,6 +38,7 @@ fi
 count="$(cat $bash_rc | grep -wc 'TRASH_UTIL_DIR' || true)"
 if ((count > 0)); then
 	echo "[ERROR]: trash_util already installed" 1>&2
+	echo "$0: Error on line $LINENO(Already installed)"
 	exit 1
 fi
 
