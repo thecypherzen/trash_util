@@ -7,14 +7,10 @@
 
 
 set -e
+errlog="$(realpath $(dirname ${BASH_SOURCE[0]}))/.utilities/.errlog"
 
 # catch unknown errors
-exec_on_err()
-{
-	echo "[ERROR]: some error occured, installation incomplete." 1>&2
-	echo "visit 'link here' to uninstall and re-run installer" 1>&2
-}
-trap 'exec_on_err' ERR
+trap 'echo $0: Error on $LINENO >> $errlog; echo FATAL: Installation failed. Visit 'link here' to uninstall and re-run installer' ERR
 
 # -- MAIN ENTRY -- #
 # -- global variables -- #
@@ -24,12 +20,12 @@ bash_rc="$HOME/.bashrc"
 aliases=""
 
 # print message
-echo "installing 'trash'..."
+echo "installing 'trash' utility..."
 sleep 1
 
 # get/set bash_profile file
-if [[ ! -e "$bash_rc" ]]; then
-	if [[ -e "$HOME/.bash_profile" ]]; then
+if [[ ! -f "$bash_rc" ]]; then
+	if [[ -f "$HOME/.bash_profile" ]]; then
 		bash_rc="$HOME/.bash_profile"
 	else
 		# create bashrc
@@ -52,7 +48,7 @@ for file in ${trash_util_files[@]}; do
 	if [[ "$file" == "rm" ]]; then
 		file="trash"
 	fi
-	aliases+="'$trash_util_dir/$file'\n"
+	aliases+="'$trash_util_dir/.utilities/$file'\n"
 done
 
 
@@ -67,11 +63,11 @@ export TRASH_UTIL_DIR="$trash_util_dir"
 EOF
 
 # define error log
-errlog="$TRASH_UTIL_DIR/.utilities/.errlog"
+errlog="$trash_util_dir/.utilities/.errlog"
 
 # schedule crontabs
 #+ cron_scheduler
-cron_path="$trash_util_dir/cron_scheduler"
+cron_path="$trash_util_dir/.utilities/cron_scheduler"
 cron_exists="$(crontab -l 2>>"$errlog" | grep -wc "$cron_path" || true)"
 if ((cron_exists == 0)); then
 	"$cron_path"
@@ -80,8 +76,7 @@ fi
 #+ on_reboot_cron
 cron_exists="$(crontab -l 2>>"$errlog"| grep -wc "@reboot $cron_path" || true)"
 if ((cron_exists == 0)); then
-	"$trash_util_dir/on_reboot_cron"
+	"$trash_util_dir/.utilities/on_reboot_cron"
 fi
-echo "[SUCCESS]: installation complete." 2>"$errlog"
-echo -e "\tRelaunch your shell and enjoy." 2>"$errlog"
-echo "" > "$errlog" 2>/dev/null
+echo "[SUCCESS]: installation complete." 2>>"$errlog"
+echo -e "\tRelaunch your shell and enjoy." 2>>"$errlog"
