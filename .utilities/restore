@@ -17,6 +17,9 @@ errlog="$TRASH_UTIL_DIR/.utilities/.errlog"	# error log
 
 
 # -- functions -- #
+set -e
+# error handler
+trap 'echo $0: Error on line $LINENO >> $errlog; echo ERROR: See $errlog' ERR
 
 # pad_spaces - add spaces to message header or body
 #+ uses two flags:
@@ -169,7 +172,7 @@ fi
 # iterate through file names provided
 for name in $@; do
 	# set path to 'name' in variable 'file'
-	ifpath="$(echo "$name" | grep -wc '.trash' 2>>"$errlog")"
+	ifpath="$(echo "$name" | grep -wc '.trash' || true)"
 	if [[ "$ifpath" -gt '0' ]]; then
 		file="$name"
 	else
@@ -183,7 +186,7 @@ for name in $@; do
 
 	# if 'file' is not in 'trash' throw error
 	#+ otherwise proceed to parse 'file'
-	base="$(basename $file 2>>"$errlog")"
+	base="$(basename $file)"
 	if [ ! -e $file ]; then
 		1>&2 echo "[ERROR]: '"$base"' not in trash"
 	else
@@ -191,15 +194,14 @@ for name in $@; do
 		res=""
 		f_count=0
 		while read -r line; do
-			entry="$(echo "$line" | tr -d '|' | tr '\n' ' ' | tr -s ' ' 2>>"$errlog")"
-			name="$(echo "$line" | cut -d ' ' -f1 2>>"$errlog")"
-			count="$(echo "$name" | grep -wc "$base" 2>>"$errlog")"
+			entry="$(echo "$line" | tr -d '|' | tr '\n' ' ' | tr -s ' ')"
+			name="$(echo "$line" | cut -d ' ' -f1)"
+			count="$(echo "$name" | grep -wc "$base" || true)"
 			if [[ "$name" == "$base" || "$count" -gt 0 ]]; then
 				res+="$entry"
-				((f_count++))
+				((f_count += 1))
 			fi
 		done < "$trash_log"
-
 		# read matching logs int array and set file_option index
 		IFS=' ' read -ra MATCH_FILES <<< "$res"
 		if (( $f_count > 1 )); then
@@ -209,10 +211,9 @@ for name in $@; do
 		fi
 
 		# restore the file with message success
-
 		# define variables for final move
 		log_fname="${MATCH_FILES[$R_OPT]}"
-		dest_fname="$(strip_suffixes "$log_fname" 2>>"$errlog")"
+		dest_fname="$(strip_suffixes "$log_fname")"
 		dest="${MATCH_FILES[$((R_OPT + 1))]}"
 		check="true"
 
@@ -258,9 +259,8 @@ for name in $@; do
 		# move file from trash to destination
 		mv "$trash/$log_fname" "$dest/$dest_fname" 2>>"$errlog"
 		"$loggr" -d "$log_fname" 2>>"$errlog"
-
 		# print success message
-		echo "[$log_fname] restored  to [$dest]" 2>>"$errlog"
+		echo "[SUCCESS]: '$log_fname' restored  to '$dest'" 2>>"$errlog"
 	fi
 done
 rm -f '.tmp' 2>>"$errlog"
