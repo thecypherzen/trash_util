@@ -8,11 +8,11 @@
 set -e
 
 # -- global variables -- #
-trash="$HOME/.trash"						# abs path to trash
-rmf="$TRASH_UTIL_DIR/.utilities/rmf"		# abs path to rmf script
-errlog="$TRASH_UTIL_DIR/.utilities/.errlog"	# abs to error log file
-declare -a files							# array of files in trash
-max_ttl=30									# file's max ttl (days)
+trash="$HOME/.trash"								# abs path to trash
+rmf="$TRASH_UTIL_DIR/.utilities/rmf"				# abs path to rmf script
+errlog="$(dirname $(realpath ${BASH_SOURCE[0]}))/.errlog"	# abs to error log file
+declare -a files									# array of files in trash
+max_ttl="$MAX_TTL"									# file's max ttl (days)
 
 # error handler
 on_error_exec()
