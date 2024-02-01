@@ -10,7 +10,7 @@ set -e
 errlog="$(realpath $(dirname ${BASH_SOURCE[0]}))/.utilities/.errlog"
 
 # catch unknown errors
-trap 'echo $0: Error on $LINENO >> $errlog; echo FATAL: Installation failed. Visit 'link here' to uninstall and re-run installer' ERR
+trap 'echo $0: Error on $LINENO >> $errlog; echo FATAL: Installation failed. See how to uninstall <here>. Then try to re-run the setup.' ERR
 
 # -- MAIN ENTRY -- #
 # -- global variables -- #
