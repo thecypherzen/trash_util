@@ -7,6 +7,7 @@
 
 
 set -e
+declare -i MAX_TTL
 errlog="$(realpath $(dirname ${BASH_SOURCE[0]}))/.utilities/.errlog"
 
 # catch unknown errors
@@ -52,6 +53,11 @@ for file in ${trash_util_files[@]}; do
 	aliases+="'$trash_util_dir/.utilities/$file'\n"
 done
 
+# get maximum time to live(max_ttl) of files in trash
+read -p "Set max days a file will be in trash(30 default): " MAX_TTL
+if (($MAX_TTL <= 0)); then
+	MAX_TTL=30
+fi
 
 # write aliases to bash_profile file
 cat >> "$bash_rc" <<EOF
@@ -60,6 +66,7 @@ cat >> "$bash_rc" <<EOF
 $(echo -e $aliases)
 # set env variable
 export TRASH_UTIL_DIR="$trash_util_dir"
+export MAX_TTL="$MAX_TTL"
 # ----  trash_util [end]  ---- #
 EOF
 
