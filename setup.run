@@ -59,7 +59,7 @@ if (($MAX_TTL <= 0)); then
 	MAX_TTL=30
 fi
 echo -n "Setting max_ttl to $MAX_TTL days."
-echo "To modify, set value of env variable 'MAX_TTL'"
+echo "To modify, change value of env variable 'MAX_TTL' in $bash_rc"
 
 # write aliases to bash_profile file
 cat >> "$bash_rc" <<EOF
