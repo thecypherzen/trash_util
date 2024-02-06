@@ -43,16 +43,25 @@ That's why I created this utility, so that in that moment when it matters most, 
 
 ## Supported Commands Syntax & Usage ##
 1.	To trash, delete or remove a file:
-`rm file_1 <file_2> ...` or `rm /abs/path/to/file_1 </rel/path/to/file_2> ...`
+```
+rm file_1 [file_2>] ...
+or
+rm /abs/path/to/file_1 [/rel/path/to/file_2] ...
+```
 2.	To restore a file back to location from where it was deleted(trashed):
-`restore file_1 <file_2> ...` or `restore /home/$USER/.trash/file_1 <~/.trash/file_2> ...`
+```
+restore file_1 [file_2] ...
+or
+restore /home/$USER/.trash/file_1 [~/.trash/file_2] ...
+```
 3.	To permanently delete a file from the system:
 ```
-	rmf file_1 <file_2> ...
+	rmf file_1 [file_2] ...
 	or
-	rmf /abs/path/to/file_1 </rel/path/to/file_2> ...
+	rmf /abs/path/to/file_1 [/rel/path/to/file_2] ...
 ```
 
+<br/>
 
 ## File Tree ##
 trash_util(ROOT) <br/>
