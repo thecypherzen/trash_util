@@ -7,6 +7,7 @@ When working on Ubuntu sandboxes or virtual environments, the `rm` command has t
 That's why I created this utility, so that in that moment when it matters most, I won't have to rewrite lines of code or re-do work already done due to an erroneous use of the `rm`.
 
 <br/>
+
 ## How it Works ##
 - The `trash_util`, when installed, creates a hidden *'trash folder(`.trash`)'* in the user's home directory.
 - It masks the `rm` command by setting an *alias* in the user's `.bashrc` or `.bash_profile` files, as the case may be. If neither exists, it creates a `.bashrc` file in the *user's home directory*. The alias links the `rm` command with the `trash` utility(script).
@@ -19,16 +20,19 @@ That's why I created this utility, so that in that moment when it matters most, 
 - It is my hope that you find this utility useful and helpful, and your feedback would be greatly appreciated. ENJOY!
 
 <br/>
+
 ## Author ##
 - [William Inyam](https://github.com/thecypherzen/)
 
 <br/>
+
 ## Technologies ##
 - All utilities are shell scripts written in GNU bash 5.0.17(1)-release (x86_64-pc-linux-gnu).
 - Code tested **only** on Ubuntu 20.04 LTS.
 - ````Please not that the trash utility was written for, and tested only on ubuntu 20.04 and uses on other Linux distributions or shell environments may not work as expected. However, if it proves useful, we'd create versions suitable for other shells - but that would depend heavily on feedback!```
 
 <br/>
+
 ## Installation and Usage ##
 - Download or clone the repo to your device from [here](https://github.com/thecypherzen/trash_util). If you downloaded, extract the zip folder.
 - `cd` into the `trash_util` or `trash_util-main` folder and run the `setup.run` file.
@@ -36,6 +40,7 @@ That's why I created this utility, so that in that moment when it matters most, 
 - In case of failure, the user would be directed to a link where there is a guide on how to uninstall and try again. *At the moment, this guide is not yet created, but in due course, it would. I might as well create an `unwind` utility that 'undos' changes made up to the point of failure - just maybe.*
 
 <br/>
+
 ## File Tree ##
 trash_util(ROOT)
 |_____ README.md
@@ -51,6 +56,7 @@ trash_util(ROOT)
 		|________ <hidden files>
 
 <br/>
+
 ## Detailed File Description ##
 Below is provided details of each file, what it does, usage and other necessary information, as may be useful to anyone who wishes to know more the ***utility***
 |----|------|-------------|
