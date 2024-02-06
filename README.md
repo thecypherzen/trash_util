@@ -46,14 +46,14 @@ trash_util(ROOT) <br/>
 |_____ README.md <br/>
 |_____ setup.run <br/>
 |_____ .utilities <br/>
-&emsp;|________ cron_schedule <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|________ on_reboot_cron <br/>
-&ensp; |________ restore <br/>
-		|________ rmf <br/>
-		|________ trash <br/>
-		|________ trash_logr <br/>
-		|________ trash_mgr <br/>
-		|________ <hidden files>
+&emsp;&emsp;&emsp;|________ cron_scheduler <br/>
+&emsp;&emsp;&emsp;|________ on_reboot_cron <br/>
+&emsp;&emsp;&emsp;|________ restore <br/>
+&emsp;&emsp;&emsp;|________ rmf <br/>
+&emsp;&emsp;&emsp;|________ trash <br/>
+&emsp;&emsp;&emsp;|________ trash_logr <br/>
+&emsp;&emsp;&emsp;|________ trash_mgr <br/>
+&emsp;&emsp;&emsp;|________ &lt;hidden files&lt;
 
 <br/>
 
