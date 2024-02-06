@@ -42,18 +42,18 @@ That's why I created this utility, so that in that moment when it matters most, 
 <br/>
 
 ## File Tree ##
-trash_util(ROOT)
-|_____ README.md
-|_____ setup.run
-|_____ .utilities
-		|________ cron_schedule
-		|________ on_reboot_cron
-		|________ restor
-		|________ rmf
-		|________ trash
-		|________ trash_logr
-		|________ trash_mgr
-		|________ <hidden files>
+trash_util(ROOT) <br/>
+|_____ README.md <br/>
+|_____ setup.run <br/>
+|_____ .utilities <br/>
+		|________ cron_schedule <br/>
+		|________ on_reboot_cron <br/>
+		|________ restore <br/>
+		|________ rmf <br/>
+		|________ trash <br/>
+		|________ trash_logr <br/>
+		|________ trash_mgr <br/>
+		|________ <hidden files> <br/>
 
 <br/>
 
