@@ -1,39 +1,41 @@
-# Overview of trash_util#
+# Overview of trash_util #
 
 ***trash_util*** is a simple set of `bash` scripts that create a trash management (recycle bin) utility on the host system.
 
-When working on Ubuntu sandboxes or virtual environments, the `rm` command has to be used super carefully as its sideffects are permanent and cannot be recalled. However, when as humans, errors are bound to be made and if in a fast-paced environment like **ALX**, we are even more likely to delete files we didn't intend to - at least I am guilty of this.
+When working on Ubuntu sandboxes or virtual environments, the `rm` command has to be used super carefully as its sideffects are permanent and cannot be recalled. However as humans, errors are bound to be made, and if in a fast-paced environment like **ALX**, we are even more likely to delete files we didn't intend to - at least I am guilty of this.
 
 That's why I created this utility, so that in that moment when it matters most, I won't have to rewrite lines of code or re-do work already done due to an erroneous use of the `rm`.
 
-
+<br/>
 ## How it Works ##
-- The `trash_util`, when installed, creates a 'trash' folder in the user's home directory.
-- It masks the `rm` command by setting an alias in the user's `.bashrc` or `.bash_profile` files, as the case may be. If neither exists, it creates a `.bashrc` file. The alias links the `rm` command with the `trash` utility.
-- This way, when `rm` is used on any file, just like the default `rm` is used, instead of permanently deleting the file from the system, it is rather moved into the `trash folder` created during installation.
-- The utility also introduces two more commands (aliases): `restore` and `rmf`. The command `restore` links to the `restore` utility and it does what it sounds like - it restores any file in the `trash folder` back to the location from where it was removed.
-	- The `trash_util` maintains a log in the `trash folder` that maps file names to their source directories.
-- The second command(alias) `rmf` allows the user to **permanently delete** a file or folder from any location on the system. It uses the `rm -f` command flag to delete files or directories passed as arguments to it.
+- The `trash_util`, when installed, creates a hidden *'trash folder(`.trash`)'* in the user's home directory.
+- It masks the `rm` command by setting an *alias* in the user's `.bashrc` or `.bash_profile` files, as the case may be. If neither exists, it creates a `.bashrc` file in the *user's home directory*. The alias links the `rm` command with the `trash` utility(script).
+- This way, when `rm` is used on any file, just like when the default `rm` is used, instead of permanently deleting the file from the system, it is rather moved into the `trash` folder created during installation.
+- The utility also introduces two more commands (aliases): `restore` and `rmf`. The command `restore` links to the `restore` utility(script) and it does what it sounds like - it restores any file in the *trash* back to the location from where it was removed.
+	- The `trash_util` maintains a log in the *trash* that maps files to their source directories.
+- The second command(alias) `rmf` allows the user to **permanently delete** a file or folder from any location on the system. It uses the `rm -f` command + flag to delete files or directories passed as arguments to it.
 - Finally, the utility keeps track of files' time(in days) in the `trash` and deletes those which have lived up to, or more than the `MAX_TTL` environment variable set during installation. The user is usually prompted to set this value during installation. If a `0` or `non-integer value` is passed, the default of `30` days is used.
 - It does its best to gracefully handle errors and where necessary, the user is shown the path to the `error log file` to see more details. If it's a developer issue, the user could send a email with the log message and it'll be fixed.
 - It is my hope that you find this utility useful and helpful, and your feedback would be greatly appreciated. ENJOY!
 
-
+<br/>
 ## Author ##
 - [William Inyam](https://github.com/thecypherzen/)
 
+<br/>
 ## Technologies ##
 - All utilities are shell scripts written in GNU bash 5.0.17(1)-release (x86_64-pc-linux-gnu).
 - Code tested **only** on Ubuntu 20.04 LTS.
 - ````Please not that the trash utility was written for, and tested only on ubuntu 20.04 and uses on other Linux distributions or shell environments may not work as expected. However, if it proves useful, we'd create versions suitable for other shells - but that would depend heavily on feedback!```
 
+<br/>
 ## Installation and Usage ##
 - Download or clone the repo to your device from [here](https://github.com/thecypherzen/trash_util). If you downloaded, extract the zip folder.
 - `cd` into the `trash_util` or `trash_util-main` folder and run the `setup.run` file.
 - If installation is successful or failed, the respective message would be printed to stdout. In event of success, simply restart your shell instance and proceed to use.
 - In case of failure, the user would be directed to a link where there is a guide on how to uninstall and try again. *At the moment, this guide is not yet created, but in due course, it would. I might as well create an `unwind` utility that 'undos' changes made up to the point of failure - just maybe.*
 
-
+<br/>
 ## File Tree ##
 trash_util(ROOT)
 |_____ README.md
@@ -48,7 +50,7 @@ trash_util(ROOT)
 		|________ trash_mgr
 		|________ <hidden files>
 
-
+<br/>
 ## Detailed File Description ##
 Below is provided details of each file, what it does, usage and other necessary information, as may be useful to anyone who wishes to know more the ***utility***
 |----|------|-------------|
