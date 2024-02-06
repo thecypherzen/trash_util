@@ -53,7 +53,7 @@ trash_util(ROOT) <br/>
 &emsp;&emsp;&emsp;|________ trash <br/>
 &emsp;&emsp;&emsp;|________ trash_logr <br/>
 &emsp;&emsp;&emsp;|________ trash_mgr <br/>
-&emsp;&emsp;&emsp;|________ &lt;hidden files&lt;
+&emsp;&emsp;&emsp;|________ &lt;hidden files&gt;
 
 <br/>
 
