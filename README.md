@@ -46,9 +46,9 @@ trash_util(ROOT) <br/>
 |_____ README.md <br/>
 |_____ setup.run <br/>
 |_____ .utilities <br/>
-|________ cron_schedule <br/>
+&emsp;|________ cron_schedule <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;|________ on_reboot_cron <br/>
-		|________ restore <br/>
+&ensp; |________ restore <br/>
 		|________ rmf <br/>
 		|________ trash <br/>
 		|________ trash_logr <br/>
