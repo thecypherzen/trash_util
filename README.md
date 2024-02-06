@@ -29,7 +29,7 @@ That's why I created this utility, so that in that moment when it matters most, 
 ## Technologies ##
 - All utilities are shell scripts written in GNU bash 5.0.17(1)-release (x86_64-pc-linux-gnu).
 - Code tested **only** on Ubuntu 20.04 LTS.
-- *Please not that the trash utility was written for, and tested only on ubuntu 20.04 and uses on other Linux distributions or shell environments may not work as expected. However, if it proves useful, we'd create versions suitable for other shells - but that would depend heavily on feedback.*
+- *Please note that the trash utility was written for, and tested only on ubuntu 20.04 and uses on other Linux distributions or shell environments may not work as expected. However, if it proves useful, we'd create versions suitable for other shells - but that would depend heavily on feedback.*
 
 <br/>
 
