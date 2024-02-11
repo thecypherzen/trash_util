@@ -34,7 +34,7 @@ That's why I created this utility, so that in that moment when it matters most, 
 <br/>
 
 ## Installation and Usage ##
-- Download or clone the repo to your device from [here](https://github.com/thecypherzen/trash_util). If you downloaded, extract the zip folder.
+- [Download](https://github.com/thecypherzen/trash_util/releases/tag/v0.1.0) the latest release or [clone](https://github.com/thecypherzen/trash_util) the repo to your machine. If you downloaded, extract the zip folder.
 - `cd` into the `trash_util` or `trash_util-main` folder and run the `setup.run` file.
 - If installation is successful or failed, the respective message would be printed to stdout. In event of success, simply restart your shell instance and proceed to use.
 - In case of failure, the user would be directed to a link where there is a guide on how to uninstall and try again. *At the moment, this guide is not yet created, but in due course, it would. I might as well create an `unwind` utility that 'undos' changes made up to the point of failure - just maybe.*
